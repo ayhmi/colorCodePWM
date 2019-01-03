@@ -6,6 +6,7 @@
 #include <softPwm.h>
 
 #define RANGE		100
+#define MIN_VALUE    10
 #define MAX_VALUE    50
 #define	NUM_LEDS	  3
 
@@ -40,7 +41,7 @@ int main()
     {
         for (i = 0; i < NUM_LEDS; ++i)
         {
-            for (j = 0; j <= MAX_VALUE; ++j)
+            for (j = MIN_VALUE; j <= MAX_VALUE; ++j)
             {
                 softPwmWrite(ledMap[i], j);
                 delay(10);
@@ -49,7 +50,7 @@ int main()
         delay(1000);
         for (i = 0; i < NUM_LEDS; ++i)
         {
-            for (j = MAX_VALUE; j >= 0; --j)
+            for (j = MAX_VALUE; j >= MIN_VALUE; --j)
             {
                 softPwmWrite(ledMap[i], j);
                 delay(10);
