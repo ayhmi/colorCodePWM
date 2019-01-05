@@ -1,13 +1,3 @@
-/*
- * tiny.c - a minimal HTTP server that serves static and
- *          dynamic content with the GET method. Neither
- *          robust, secure, nor modular. Use for instructional
- *          purposes only.
- *          Dave O'Hallaron, Carnegie Mellon
- *
- *          usage: tiny <port>
- */
-
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -46,11 +36,11 @@ void cerror(FILE *stream, char *cause, char *errno,
     fprintf(stream, "HTTP/1.1 %s %s\n", errno, shortmsg);
     fprintf(stream, "Content-type: text/html\n");
     fprintf(stream, "\n");
-    fprintf(stream, "<html><title>Tiny Error</title>");
+    fprintf(stream, "<html><title>Ayhmi Error</title>");
     fprintf(stream, "<body bgcolor=""ffffff"">\n");
     fprintf(stream, "%s: %s\n", errno, shortmsg);
     fprintf(stream, "<p>%s: %s\n", longmsg, cause);
-    fprintf(stream, "<hr><em>The Tiny Web server</em>\n");
+    fprintf(stream, "<hr><em>The Ayhmi Web server</em>\n");
 }
 
 int main(int argc, char **argv) 
@@ -136,8 +126,9 @@ int main(int argc, char **argv)
         fgets(buf, BUFSIZE, stream);
         printf("%s", buf);
         sscanf(buf, "%s %s %s\n", method, uri, version);
+        printf("uri: %s", uri);
         
-        /* tiny only supports the GET method */
+        /* only supports the GET method */
         if (strcasecmp(method, "GET")) 
         {
             cerror(stream, method, "501", "Not Implemented",
@@ -200,7 +191,7 @@ int main(int argc, char **argv)
             
             /* print response header */
             fprintf(stream, "HTTP/1.1 200 OK\n");
-            fprintf(stream, "Server: Tiny Web Server\n");
+            fprintf(stream, "Server: Ayhmi Web Server\n");
             fprintf(stream, "Content-length: %d\n", (int)sbuf.st_size);
             fprintf(stream, "Content-type: %s\n", filetype);
             fprintf(stream, "\r\n");
