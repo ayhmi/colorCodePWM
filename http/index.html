@@ -2,11 +2,29 @@
 <html>
 <head>
 	<title>codeColor</title>
+<style> 
+input[type=text] {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  box-sizing: border-box;
+}
+input[type=button], input[type=submit], input[type=reset] {
+  width: 100%;
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 16px 32px;
+  text-decoration: none;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+</style>
 </head>
 <body style="text-align:left;">
 <form action="" method="get">
 	<script src="jscolor.js"></script>
-	Color: <input class="jscolor" value="000000" type="text" name="color"><input type="submit" value="Submit">
+	<p align="center">Color</p><input align="center" class="jscolor" value="000000" type="text" name="color" maxlength="6" size="6"><input type="submit" value="Submit">
 </form>
 </body>
 </html>
