@@ -121,6 +121,7 @@ int main(int argc, char **argv) {
         
         /* wait for a connection request */
         childfd = accept(parentfd, (struct sockaddr *) &clientaddr, &clientlen);
+        printf("accept\n");
         if (childfd < 0)
             error("ERROR on accept");
         
