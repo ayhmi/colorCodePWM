@@ -122,20 +122,19 @@ int main(int argc, char **argv) {
     while (1) {
         
         /* wait for a connection request */
-        printf("accept\n");
         childfd = accept(parentfd, (struct sockaddr *) &clientaddr, &clientlen);
         if (childfd < 0)
             error("ERROR on accept");
         
         /* determine who sent the message */
-        printf("gethostbyaddr 0x%x\n", clientaddr.sin_addr.s_addr);
+        printf("client connected: 0x%x\n", clientaddr.sin_addr.s_addr);
         hostp = gethostbyaddr((const char *)&clientaddr.sin_addr.s_addr,
                               sizeof(clientaddr.sin_addr.s_addr), AF_INET);
-        if (hostp == NULL)
-            error("ERROR on gethostbyaddr");
-        hostaddrp = inet_ntoa(clientaddr.sin_addr);
-        if (hostaddrp == NULL)
-            error("ERROR on inet_ntoa\n");
+        //if (hostp == NULL)
+        //    error("ERROR on gethostbyaddr");
+        //hostaddrp = inet_ntoa(clientaddr.sin_addr);
+        //if (hostaddrp == NULL)
+        //    error("ERROR on inet_ntoa\n");
         
         /* open the child socket descriptor as a stream */
         if ((stream = fdopen(childfd, "r+")) == NULL)
