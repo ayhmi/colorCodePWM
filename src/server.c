@@ -31,7 +31,8 @@ extern char **environ; /* the environment */
 /*
  * error - wrapper for perror used for bad syscalls
  */
-void error(char *msg) {
+void error(char *msg) 
+{
     perror(msg);
     exit(1);
 }
@@ -40,7 +41,8 @@ void error(char *msg) {
  * cerror - returns an error message to the client
  */
 void cerror(FILE *stream, char *cause, char *errno,
-            char *shortmsg, char *longmsg) {
+            char *shortmsg, char *longmsg) 
+{
     fprintf(stream, "HTTP/1.1 %s %s\n", errno, shortmsg);
     fprintf(stream, "Content-type: text/html\n");
     fprintf(stream, "\n");
@@ -51,7 +53,8 @@ void cerror(FILE *stream, char *cause, char *errno,
     fprintf(stream, "<hr><em>The Tiny Web server</em>\n");
 }
 
-int main(int argc, char **argv) {
+int main(int argc, char **argv) 
+{
     
     /* variables for connection management */
     int parentfd;          /* parent socket */
@@ -81,7 +84,8 @@ int main(int argc, char **argv) {
     int wait_status;       /* status from wait */
     
     /* check command line args */
-    if (argc != 2) {
+    if (argc != 2) 
+    {
         fprintf(stderr, "usage: %s <port>\n", argv[0]);
         ledInit();
         loopColor();
@@ -104,13 +108,11 @@ int main(int argc, char **argv) {
     serveraddr.sin_family = AF_INET;
     serveraddr.sin_addr.s_addr = htonl(INADDR_ANY);
     serveraddr.sin_port = htons((unsigned short)portno);
-    printf("bind\n");
     if (bind(parentfd, (struct sockaddr *) &serveraddr,
              sizeof(serveraddr)) < 0)
         error("ERROR on binding");
     
     /* get us ready to accept connection requests */
-    printf("listen\n");
     if (listen(parentfd, 5) < 0) /* allow 5 requests to queue up */
         error("ERROR on listen");
     
@@ -119,22 +121,12 @@ int main(int argc, char **argv) {
      * serve requested content, close connection.
      */
     clientlen = sizeof(clientaddr);
-    while (1) {
-        
+    while (1) 
+    {        
         /* wait for a connection request */
         childfd = accept(parentfd, (struct sockaddr *) &clientaddr, &clientlen);
         if (childfd < 0)
             error("ERROR on accept");
-        
-        /* determine who sent the message */
-        printf("client connected: 0x%x\n", clientaddr.sin_addr.s_addr);
-        hostp = gethostbyaddr((const char *)&clientaddr.sin_addr.s_addr,
-                              sizeof(clientaddr.sin_addr.s_addr), AF_INET);
-        //if (hostp == NULL)
-        //    error("ERROR on gethostbyaddr");
-        //hostaddrp = inet_ntoa(clientaddr.sin_addr);
-        //if (hostaddrp == NULL)
-        //    error("ERROR on inet_ntoa\n");
         
         /* open the child socket descriptor as a stream */
         if ((stream = fdopen(childfd, "r+")) == NULL)
@@ -146,9 +138,10 @@ int main(int argc, char **argv) {
         sscanf(buf, "%s %s %s\n", method, uri, version);
         
         /* tiny only supports the GET method */
-        if (strcasecmp(method, "GET")) {
+        if (strcasecmp(method, "GET")) 
+        {
             cerror(stream, method, "501", "Not Implemented",
-                   "Tiny does not implement this method");
+                   "This method is not implemented");
             fclose(stream);
             close(childfd);
             continue;
@@ -157,46 +150,45 @@ int main(int argc, char **argv) {
         /* read (and ignore) the HTTP headers */
         fgets(buf, BUFSIZE, stream);
         printf("%s", buf);
-        while(strcmp(buf, "\r\n")) {
+        while(strcmp(buf, "\r\n")) 
+        {
             fgets(buf, BUFSIZE, stream);
             printf("%s", buf);
         }
         
         /* parse the uri [crufty] */
-        if (!strstr(uri, "cgi-bin")) { /* static content */
-            is_static = 1;
+        is_static = 1;
+        p = index(uri, '?');
+        if (p) 
+        {
+            strcpy(cgiargs, p+1);
+            *p = '\0';
+        }
+        else 
+        {
             strcpy(cgiargs, "");
-            strcpy(filename, "./http");
-            strcat(filename, uri);
-            if (uri[strlen(uri)-1] == '/')
-                strcat(filename, "index.html");
         }
-        else { /* dynamic content */
-            is_static = 0;
-            p = index(uri, '?');
-            if (p) {
-                strcpy(cgiargs, p+1);
-                *p = '\0';
-            }
-            else {
-                strcpy(cgiargs, "");
-            }
-            strcpy(filename, "./http");
-            strcat(filename, uri);
-        }
+        strcpy(filename, "./http");
+        strcat(filename, uri);
+        if (uri[strlen(uri)-1] == '/')
+            strcat(filename, "index.html");
+        strcpy(filename, "./http");
+        strcat(filename, uri);
         printf("filename: %s\n", filename);
         
         /* make sure the file exists */
-        if (stat(filename, &sbuf) < 0) {
+        if (stat(filename, &sbuf) < 0) 
+        {
             cerror(stream, filename, "404", "Not found",
-                   "Tiny couldn't find this file");
+                   "Couldn't find file");
             fclose(stream);
             close(childfd);
             continue;
         }
         
         /* serve static content */
-        if (is_static) {
+        if (is_static) 
+        {
             if (strstr(filename, ".html"))
                 strcpy(filetype, "text/html");
             else if (strstr(filename, ".gif"))
@@ -219,12 +211,13 @@ int main(int argc, char **argv) {
             p = mmap(0, sbuf.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
             fwrite(p, 1, sbuf.st_size, stream);
             munmap(p, sbuf.st_size);
-        }
-        
+        }        
         /* serve dynamic content */
-        else {
+        else 
+        {
             /* make sure file is a regular executable file */
-            if (!(S_IFREG & sbuf.st_mode) || !(S_IXUSR & sbuf.st_mode)) {
+            if (!(S_IFREG & sbuf.st_mode) || !(S_IXUSR & sbuf.st_mode)) 
+            {
                 cerror(stream, filename, "403", "Forbidden",
                        "You are not allow to access this item");
                 fclose(stream);
@@ -238,25 +231,29 @@ int main(int argc, char **argv) {
             /* print first part of response header */
             sprintf(buf, "HTTP/1.1 200 OK\n");
             write(childfd, buf, strlen(buf));
-            sprintf(buf, "Server: Tiny Web Server\n");
+            sprintf(buf, "Server: Ayhmi Web Server\n");
             write(childfd, buf, strlen(buf));
             
             /* create and run the child CGI process so that all child
              output to stdout and stderr goes back to the client via the
              childfd socket descriptor */
             pid = fork();
-            if (pid < 0) {
+            if (pid < 0) 
+            {
                 perror("ERROR in fork");
                 exit(1);
             }
-            else if (pid > 0) { /* parent process */
+            else if (pid > 0) 
+            { /* parent process */
                 wait(&wait_status);
             }
-            else { /* child  process*/
+            else 
+            { /* child  process*/
                 close(0); /* close stdin */
                 dup2(childfd, 1); /* map socket to stdout */
                 dup2(childfd, 2); /* map socket to stderr */
-                if (execve(filename, NULL, environ) < 0) {
+                if (execve(filename, NULL, environ) < 0) 
+                {
                     perror("ERROR in execve");
                 }
             }
