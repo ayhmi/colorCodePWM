@@ -120,6 +120,7 @@ int main(int argc, char **argv) {
      */
     clientlen = sizeof(clientaddr);
     while (1) {
+        
         /* wait for a connection request */
         printf("accept\n");
         childfd = accept(parentfd, (struct sockaddr *) &clientaddr, &clientlen);
@@ -127,9 +128,9 @@ int main(int argc, char **argv) {
             error("ERROR on accept");
         
         /* determine who sent the message */
-        printf("gethostbyaddr\n");
-        hostp = gethostbyaddr((const void *)&clientaddr.sin_addr,
-                              sizeof(clientaddr.sin_addr), AF_INET);
+        printf("gethostbyaddr %s\n", (const char *)&clientaddr.sin_addr.s_addr);
+        hostp = gethostbyaddr((const char *)&clientaddr.sin_addr.s_addr,
+                              sizeof(clientaddr.sin_addr.s_addr), AF_INET);
         if (hostp == NULL)
             error("ERROR on gethostbyaddr");
         hostaddrp = inet_ntoa(clientaddr.sin_addr);
