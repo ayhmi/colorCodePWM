@@ -1,5 +1,5 @@
-PROJECT = softPwm
-IDIR =include
+PROJECT = colorCodePWM
+IDIR =src
 SRCDIR=src
 CC=gcc
 CFLAGS=-I$(IDIR)
@@ -9,10 +9,10 @@ LDIR=lib
 
 LIBS=-lwiringPi -lpthread
 
-_DEPS = 
+_DEPS = softPwm.h
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
-_OBJ = softPwm.o 
+_OBJ = softPwm.o server.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 

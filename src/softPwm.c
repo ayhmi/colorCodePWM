@@ -10,25 +10,11 @@
 #define MAX_VALUE    50
 #define	NUM_LEDS	  3
 
-#define RED_LED 0
-#define GREEN_LED 1
-#define BLUE_LED 2
-
 int ledMap[NUM_LEDS] = { 12, 13, 14 };
 
-#if 0
-void setLed(unsigned int ledIndex, unsigned char value)
+void ledInit(void)
 {
-    unsigned char pwmValue = (100 * value) / 255;
-    
-    softPwmWrite(ledMap[ledIndex], pwmValue);
-}
-#endif
-
-int main()
-{
-    int i, j;
-    char buf[80];
+    int i;
 
     wiringPiSetup();
 
@@ -36,6 +22,18 @@ int main()
     {
         softPwmCreate(ledMap[i], 0, RANGE);
     }
+}
+
+void setLed(unsigned int ledIndex, unsigned char value)
+{
+    unsigned char pwmValue = (100 * value) / 255;
+    
+    softPwmWrite(ledMap[ledIndex], pwmValue);
+}
+
+void loopColor(void)
+{
+    int i, j;
 
     for (;;)
     {

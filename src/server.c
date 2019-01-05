@@ -21,6 +21,7 @@
 #include <sys/wait.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include "softPwm.h"
 
 #define BUFSIZE 1024
 #define MAXERRS 16
@@ -82,7 +83,9 @@ int main(int argc, char **argv) {
     /* check command line args */
     if (argc != 2) {
         fprintf(stderr, "usage: %s <port>\n", argv[0]);
-        exit(1);
+        ledInit();
+        loopColor();
+        exit(0);
     }
     portno = atoi(argv[1]);
     
