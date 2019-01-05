@@ -31,6 +31,13 @@ void setLed(unsigned int ledIndex, unsigned char value)
     softPwmWrite(ledMap[ledIndex], pwmValue);
 }
 
+void setColor(unsigned int color)
+{
+    setLed(RED_LED, (color & 0xff0000) >> 16);
+    setLed(GREEN_LED, (color & 0xff00) >> 8);
+    setLed(BLUE_LED, (color & 0xff));
+}
+
 void loopColor(void)
 {
     int i, j;

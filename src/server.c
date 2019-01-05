@@ -66,6 +66,7 @@ int main(int argc, char **argv)
     char filename[BUFSIZE];/* path derived from uri */
     char filetype[BUFSIZE];/* path derived from uri */
     char cgiargs[BUFSIZE]; /* cgi argument list */
+    unsigned int color; /* color argument */
     char *p;               /* temporary pointer */
     int is_static;         /* static request? */
     struct stat sbuf;      /* file status */
@@ -106,6 +107,7 @@ int main(int argc, char **argv)
     if (listen(parentfd, 5) < 0) /* allow 5 requests to queue up */
         error("ERROR on listen");
     
+    ledInit();
     /*
      * main loop: wait for a connection request, parse HTTP,
      * serve requested content, close connection.
@@ -126,7 +128,6 @@ int main(int argc, char **argv)
         fgets(buf, BUFSIZE, stream);
         printf("%s", buf);
         sscanf(buf, "%s %s %s\n", method, uri, version);
-        printf("uri: %s", uri);
         
         /* only supports the GET method */
         if (strcasecmp(method, "GET")) 
@@ -176,6 +177,11 @@ int main(int argc, char **argv)
             close(childfd);
             continue;
         }
+        
+        color = 0;
+        sscanf(cgiargs, "color=%x", &color);
+        
+        setColor(color);
         
         /* serve static content */
         if (is_static) 
