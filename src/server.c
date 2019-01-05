@@ -128,7 +128,7 @@ int main(int argc, char **argv) {
             error("ERROR on accept");
         
         /* determine who sent the message */
-        printf("gethostbyaddr %s\n", (const char *)clientaddr.sin_addr.s_addr);
+        printf("gethostbyaddr 0x%x\n", clientaddr.sin_addr.s_addr);
         hostp = gethostbyaddr((const char *)&clientaddr.sin_addr.s_addr,
                               sizeof(clientaddr.sin_addr.s_addr), AF_INET);
         if (hostp == NULL)
