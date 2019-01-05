@@ -66,7 +66,7 @@ int main(int argc, char **argv)
     char filename[BUFSIZE];/* path derived from uri */
     char filetype[BUFSIZE];/* path derived from uri */
     char cgiargs[BUFSIZE]; /* cgi argument list */
-    unsigned int color; /* color argument */
+    unsigned int color = 0; /* color argument */
     char *p;               /* temporary pointer */
     int is_static;         /* static request? */
     struct stat sbuf;      /* file status */
@@ -114,7 +114,8 @@ int main(int argc, char **argv)
      */
     clientlen = sizeof(clientaddr);
     while (1) 
-    {        
+    {       
+        setColor(color); 
         /* wait for a connection request */
         childfd = accept(parentfd, (struct sockaddr *) &clientaddr, &clientlen);
         if (childfd < 0)
@@ -178,11 +179,8 @@ int main(int argc, char **argv)
             continue;
         }
         
-        color = 0;
         sscanf(cgiargs, "color=%x", &color);
-        
-        setColor(color);
-        
+                
         /* serve static content */
         if (is_static) 
         {
