@@ -104,11 +104,13 @@ int main(int argc, char **argv) {
     serveraddr.sin_family = AF_INET;
     serveraddr.sin_addr.s_addr = htonl(INADDR_ANY);
     serveraddr.sin_port = htons((unsigned short)portno);
+    printf("bind\n");
     if (bind(parentfd, (struct sockaddr *) &serveraddr,
              sizeof(serveraddr)) < 0)
         error("ERROR on binding");
     
     /* get us ready to accept connection requests */
+    printf("listen\n");
     if (listen(parentfd, 5) < 0) /* allow 5 requests to queue up */
         error("ERROR on listen");
     
@@ -120,12 +122,13 @@ int main(int argc, char **argv) {
     while (1) {
         
         /* wait for a connection request */
-        childfd = accept(parentfd, (struct sockaddr *) &clientaddr, &clientlen);
         printf("accept\n");
+        childfd = accept(parentfd, (struct sockaddr *) &clientaddr, &clientlen);
         if (childfd < 0)
             error("ERROR on accept");
         
         /* determine who sent the message */
+        printf("gethostbyaddr\n");
         hostp = gethostbyaddr((const char *)&clientaddr.sin_addr.s_addr,
                               sizeof(clientaddr.sin_addr.s_addr), AF_INET);
         if (hostp == NULL)
