@@ -120,9 +120,7 @@ int main(int argc, char **argv) {
      */
     clientlen = sizeof(clientaddr);
     while (1) {
-        memset(&clientaddr, 0, clientlen);
-        clientaddr.sin_family = AF_INET;
-        clientaddr.sin_addr.s_addr = htonl(INADDR_ANY);
+        inet_pton(AF_INET, "127.0.0.1", (char*)clientaddr); 
         /* wait for a connection request */
         printf("accept\n");
         childfd = accept(parentfd, (struct sockaddr *) &clientaddr, &clientlen);
