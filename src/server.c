@@ -163,7 +163,7 @@ int main(int argc, char **argv) {
         if (!strstr(uri, "cgi-bin")) { /* static content */
             is_static = 1;
             strcpy(cgiargs, "");
-            strcpy(filename, ".");
+            strcpy(filename, "../http");
             strcat(filename, uri);
             if (uri[strlen(uri)-1] == '/')
                 strcat(filename, "index.html");
@@ -178,9 +178,10 @@ int main(int argc, char **argv) {
             else {
                 strcpy(cgiargs, "");
             }
-            strcpy(filename, ".");
+            strcpy(filename, "../http");
             strcat(filename, uri);
         }
+        printf("filename: %s\n", filename);
         
         /* make sure the file exists */
         if (stat(filename, &sbuf) < 0) {
