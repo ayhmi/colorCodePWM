@@ -3,7 +3,7 @@
 #include <string.h>
 
 #include <wiringPi.h>
-#include <softPwm.h>
+#include "softPwmModified.h"
 #include "colorControl.h"
 
 #define RANGE		255
@@ -21,7 +21,7 @@ void ledInit(void)
 
     for (i = 0; i < NUM_LEDS; ++i)
     {
-        softPwmCreate(ledMap[i], 0, RANGE);
+        softPwmModifiedCreate(ledMap[i], 0, RANGE);
     }
 }
 
@@ -29,7 +29,7 @@ void setLed(unsigned int ledIndex, unsigned char value)
 {
     unsigned char pwmValue = (RANGE * value) / 255;
     
-    softPwmWrite(ledMap[ledIndex], pwmValue);
+    softPwmModifiedWrite(ledMap[ledIndex], pwmValue);
 }
 
 void setColor(unsigned int color)
@@ -49,7 +49,7 @@ void loopColor(void)
         {
             for (j = MIN_VALUE; j <= MAX_VALUE; ++j)
             {
-                softPwmWrite(ledMap[i], j);
+                softPwmModifiedWrite(ledMap[i], j);
                 delay(10);
             }
         }
@@ -58,7 +58,7 @@ void loopColor(void)
         {
             for (j = MAX_VALUE; j >= MIN_VALUE; --j)
             {
-                softPwmWrite(ledMap[i], j);
+                softPwmModifiedWrite(ledMap[i], j);
                 delay(10);
             }
         }
