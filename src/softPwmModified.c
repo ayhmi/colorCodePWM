@@ -25,6 +25,7 @@
 #include <stdio.h>
 #include <malloc.h>
 #include <pthread.h>
+#include <unistd.h>
 
 #include "wiringPi.h"
 #include "softPwmModified.h"
@@ -87,11 +88,11 @@ static void *softPwmThread (void *arg)
 
     if (mark != 0)
       digitalWrite (pin, HIGH) ;
-    delayMicroseconds (mark * PULSE_TIME) ;
+    usleep (mark * PULSE_TIME) ;
 
     if (space != 0)
       digitalWrite (pin, LOW) ;
-    delayMicroseconds (space * PULSE_TIME) ;
+    usleep (space * PULSE_TIME) ;
   }
 
   return NULL ;
