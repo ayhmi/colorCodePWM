@@ -127,11 +127,8 @@ int main(int argc, char **argv)
         
         /* get the HTTP request line */
         fgets(buf, BUFSIZE, stream);
-        printf("REQUEST: %s\n", buf);
+        //printf("REQUEST: %s\n", buf);
         sscanf(buf, "%s %s %s\n", method, uri, version);
-        printf("METHOD: %s\n", method);
-        printf("URI: %s\n", uri);
-        printf("VERSION: %s\n", version);
         
         /* only supports the GET method */
         if (strcasecmp(method, "GET")) 
@@ -145,11 +142,11 @@ int main(int argc, char **argv)
         
         /* read (and ignore) the HTTP headers */
         fgets(buf, BUFSIZE, stream);
-        printf("%s", buf);
+        //printf("%s", buf);
         while(strcmp(buf, "\r\n")) 
         {
             fgets(buf, BUFSIZE, stream);
-            printf("%s", buf);
+            //printf("%s", buf);
         }
         
         /* parse the uri [crufty] */
@@ -166,13 +163,13 @@ int main(int argc, char **argv)
         }
         strcpy(filename, "./http");
         strcat(filename, uri);
-        printf("strlen(uri)-1: %d\n", strlen(uri)-1);
-        printf("uri[strlen(uri)-1]: %c\n", uri[strlen(uri)-1]);
         if (uri[strlen(uri)-1] == '/')
-            strcat(filename, "index.html");
+        {
+            strcat(uri, "index.html");
+        }
         strcpy(filename, "./http");
         strcat(filename, uri);
-        printf("filename: %s\n", filename);
+        //printf("filename: %s\n", filename);
         
         /* make sure the file exists */
         if (stat(filename, &sbuf) < 0) 
