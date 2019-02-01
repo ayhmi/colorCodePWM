@@ -2,7 +2,7 @@ PROJECT = colorCodePWM
 IDIR =src
 SRCDIR=src
 CC=gcc
-CFLAGS=-Wnonnull -I$(IDIR)
+CFLAGS=-Wno-nonnull -I$(IDIR)
 
 ODIR=src
 LDIR=lib
