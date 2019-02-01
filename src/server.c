@@ -130,8 +130,8 @@ int main(int argc, char **argv)
         printf("%s", buf);
         sscanf(buf, "%s %s %s\n", method, uri, version);
         printf("method: %s\n", method);
-        printf("uri: %s\n", buf);
-        printf("version: %s\n", buf);
+        printf("uri: %s\n", uri);
+        printf("version: %s\n", version);
         
         /* only supports the GET method */
         if (strcasecmp(method, "GET")) 
