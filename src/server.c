@@ -127,11 +127,11 @@ int main(int argc, char **argv)
         
         /* get the HTTP request line */
         fgets(buf, BUFSIZE, stream);
-        printf("%s", buf);
+        printf("REQUEST: %s\n", buf);
         sscanf(buf, "%s %s %s\n", method, uri, version);
-        printf("method: %sxxx\n", method);
-        printf("uri: %sxxx\n", uri);
-        printf("version: %sxxx\n", version);
+        printf("METHOD: %sxxx\n", method);
+        printf("URI: %sxxx\n", uri);
+        printf("VERSION: %sxxx\n", version);
         
         /* only supports the GET method */
         if (strcasecmp(method, "GET")) 
