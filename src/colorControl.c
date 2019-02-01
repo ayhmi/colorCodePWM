@@ -6,7 +6,7 @@
 #include <softPwm.h>
 #include "colorControl.h"
 
-#define RANGE		100
+#define RANGE		255
 #define MIN_VALUE    10
 #define MAX_VALUE    50
 #define	NUM_LEDS	  3
@@ -27,7 +27,7 @@ void ledInit(void)
 
 void setLed(unsigned int ledIndex, unsigned char value)
 {
-    unsigned char pwmValue = (100 * value) / 255;
+    unsigned char pwmValue = (RANGE * value) / 255;
     
     softPwmWrite(ledMap[ledIndex], pwmValue);
 }
