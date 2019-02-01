@@ -11,7 +11,7 @@
 #include <sys/wait.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
-#include "softPwm.h"
+#include "colorControl.h"
 
 #define BUFSIZE 1024
 #define MAXERRS 16
