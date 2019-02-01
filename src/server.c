@@ -129,9 +129,9 @@ int main(int argc, char **argv)
         fgets(buf, BUFSIZE, stream);
         printf("%s", buf);
         sscanf(buf, "%s %s %s\n", method, uri, version);
-        printf("method: %s", method);
-        printf("uri: %s", buf);
-        printf("version: %s", buf);
+        printf("method: %s\n", method);
+        printf("uri: %s\n", buf);
+        printf("version: %s\n", buf);
         
         /* only supports the GET method */
         if (strcasecmp(method, "GET")) 
