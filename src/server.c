@@ -129,9 +129,9 @@ int main(int argc, char **argv)
         fgets(buf, BUFSIZE, stream);
         printf("REQUEST: %s\n", buf);
         sscanf(buf, "%s %s %s\n", method, uri, version);
-        printf("METHOD: %sxxx\n", method);
-        printf("URI: %sxxx\n", uri);
-        printf("VERSION: %sxxx\n", version);
+        printf("METHOD: %s\n", method);
+        printf("URI: %s\n", uri);
+        printf("VERSION: %s\n", version);
         
         /* only supports the GET method */
         if (strcasecmp(method, "GET")) 
@@ -166,6 +166,8 @@ int main(int argc, char **argv)
         }
         strcpy(filename, "./http");
         strcat(filename, uri);
+        printf("strlen(uri)-1: %d\n", strlen(uri)-1);
+        printf("uri[strlen(uri)-1]: %c\n", uri[strlen(uri)-1]);
         if (uri[strlen(uri)-1] == '/')
             strcat(filename, "index.html");
         strcpy(filename, "./http");
@@ -174,6 +176,15 @@ int main(int argc, char **argv)
         
         /* make sure the file exists */
         if (stat(filename, &sbuf) < 0) 
+        {
+            cerror(stream, filename, "404", "Not found",
+                   "Couldn't find file");
+            fclose(stream);
+            close(childfd);
+            continue;
+        }
+        
+        if (sbuf.st_mode & S_IFDIR == S_IFDIR)
         {
             cerror(stream, filename, "404", "Not found",
                    "Couldn't find file");
