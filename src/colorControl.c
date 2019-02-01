@@ -4,6 +4,7 @@
 
 #include <wiringPi.h>
 #include <softPwm.h>
+#include "colorControl.h"
 
 #define RANGE		100
 #define MIN_VALUE    10
