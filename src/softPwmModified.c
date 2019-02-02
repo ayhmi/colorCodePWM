@@ -52,11 +52,15 @@
 
 #define	PULSE_TIME	100
 
-static volatile int marks[MAX_PINS];
-static volatile int range[MAX_PINS];
-static volatile pthread_t threads[MAX_PINS];
-static volatile int newPin = -1;
+typedef struct
+{
+    int pin;
+    int value;
+    int range;
+    pthread_t thread;
+} SoftPwmDataType;
 
+static volatile SoftPwmDataType pwmDatas[MAX_PINS];
 
 /*
  * softPwmThread:
@@ -73,17 +77,13 @@ static void *softPwmThread(void *arg)
     pthread_setschedparam(pthread_self(), SCHED_RR, &param);
 
     pin = *((int *)arg);
-    free(arg);
-
-    pin = newPin;
-    newPin = -1;
 
     piHiPri (90);
 
     for (;;)
     {
-        mark = marks[pin];
-        space = range[pin] - mark;
+        mark = pwmDatas[pin].value;
+        space = pwmDatas[pin].range - mark;
 
         if (mark != 0)
         {    
@@ -116,12 +116,12 @@ void softPwmModifiedWrite(int pin, int value)
         {
             value = 0;
         }
-        else if (value > range[pin])
+        else if (value > pwmDatas[pin].range)
         {
-            value = range[pin];
+            value = pwmDatas[pin].range;
         }
 
-        marks[pin] = value;
+        pwmDatas[pin].value = value;
     }
 }
 
@@ -134,16 +134,12 @@ void softPwmModifiedWrite(int pin, int value)
 
 int softPwmModifiedCreate(int pin, int initialValue, int pwmRange)
 {
-    int res;
-    pthread_t myThread;
-    int *passPin;
-
     if (pin >= MAX_PINS)
     {
         return -1;
     }
 
-    if (range[pin] != 0)	// Already running on this pin
+    if (pwmDatas[pin].range != 0)	// Already running on this pin
     {
         return -1;
     }
@@ -153,30 +149,14 @@ int softPwmModifiedCreate(int pin, int initialValue, int pwmRange)
         return -1;
     }
 
-    passPin = malloc(sizeof(*passPin));
-    if (passPin == NULL)
-    {
-        return -1;
-    }
-
     digitalWrite(pin, LOW);
     pinMode(pin, OUTPUT);
 
-    marks[pin] = initialValue;
-    range[pin] = pwmRange;
+    pwmDatas[pin].value = initialValue;
+    pwmDatas[pin].range = pwmRange;
+    pwmDatas[pin].pin = pin;
 
-    *passPin = pin;
-    newPin = pin;
-    res = pthread_create(&myThread, NULL, softPwmThread, (void *)passPin);
-
-    while (newPin != -1)
-    {
-        delay(1);
-    }
-
-    threads[pin] = myThread;
-
-    return res;
+    return pthread_create(&pwmDatas[pin].thread, NULL, softPwmThread, (void *)&pwmDatas[pin].pin);
 }
 
 
@@ -188,13 +168,13 @@ int softPwmModifiedCreate(int pin, int initialValue, int pwmRange)
 
 void softPwmModifiedStop(int pin)
 {
-    if (pin < MAX_PINS)
+    if ((pin < MAX_PINS) && (pin >= 0))
     {
-        if (range[pin] != 0)
+        if (pwmDatas[pin].range != 0)
         {
-            pthread_cancel(threads[pin]);
-            pthread_join(threads[pin], NULL);
-            range[pin] = 0;
+            pthread_cancel(pwmDatas[pin].thread);
+            pthread_join(pwmDatas[pin].thread, NULL);
+            pwmDatas[pin].range = 0;
             digitalWrite(pin, LOW);
         }
     }
