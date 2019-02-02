@@ -60,7 +60,7 @@ typedef struct
     pthread_t thread;
 } SoftPwmDataType;
 
-static volatile SoftPwmDataType pwmDatas[MAX_PINS];
+static SoftPwmDataType pwmDatas[MAX_PINS];
 
 /*
  * softPwmThread:
