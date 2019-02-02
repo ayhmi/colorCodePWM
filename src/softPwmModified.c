@@ -64,7 +64,7 @@ static volatile int newPin = -1;
  *********************************************************************************
  */
 
-static void *softPwmThread (void *arg)
+static void *softPwmThread(void *arg)
 {
     int pin, mark, space;
     struct sched_param param;
@@ -108,7 +108,7 @@ static void *softPwmThread (void *arg)
  *********************************************************************************
  */
 
-void softPwmModifiedWrite (int pin, int value)
+void softPwmModifiedWrite(int pin, int value)
 {
     if (pin < MAX_PINS)
     {
