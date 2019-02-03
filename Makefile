@@ -12,7 +12,7 @@ LIBS=-lwiringPi -lpthread
 _DEPS = colorControl.h softPwmModified.h
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
-_OBJ = colorControl.o server.o softPwmModified.o
+_OBJ = highResTimer.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 
