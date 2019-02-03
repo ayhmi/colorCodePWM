@@ -6,7 +6,7 @@
 #include <signal.h>
 #include <time.h>
 
-void print_time (void);
+void print_time (int);
 
 timer_t timer1;
 
@@ -43,7 +43,7 @@ int main (int argc, char **argv)
     exit (EXIT_SUCCESS);
 }
 
-void print_time (void)
+void print_time (int signum)
 {   
     struct timespec tp;
     char buffer [80];
