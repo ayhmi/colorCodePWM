@@ -56,7 +56,7 @@ int main (int argc, char **argv)
     new_value.it_interval.tv_sec = 0;
     new_value.it_interval.tv_nsec = 0;  /* one time timer, no reset */
     new_value.it_value.tv_sec = 0;
-    new_value.it_value.tv_nsec = 1000000; /* 1 ms */
+    new_value.it_value.tv_nsec = 1000000000; /* 1 ms */
     if (timer_settime (timer2, 0, &new_value, &old_value) == -1)
         perror ("timer_settime");
 
