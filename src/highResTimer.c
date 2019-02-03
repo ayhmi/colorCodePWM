@@ -32,9 +32,9 @@ int main (int argc, char **argv)
 
 
     timerSpec.it_interval.tv_sec = 0;
-    timerSpec.it_interval.tv_nsec = 100000;  /* 100 us */
+    timerSpec.it_interval.tv_nsec = 50000;  /* 50 us */
     timerSpec.it_value.tv_sec = 0;
-    timerSpec.it_value.tv_nsec = 100000;     /* 100 us */
+    timerSpec.it_value.tv_nsec = 50000;     /* 50 us */
     if (timer_settime (timer1, 0, &timerSpec, &timerSpecOld) == -1)
         perror ("timer_settime");
     
