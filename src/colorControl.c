@@ -18,10 +18,12 @@ void ledInit(void)
     int i;
 
     wiringPiSetup();
+    
+    softPwmModifiedInit(RANGE);
 
     for (i = 0; i < NUM_LEDS; ++i)
     {
-        softPwmModifiedCreate(ledMap[i], 0, RANGE);
+        softPwmModifiedCreate(ledMap[i], 0);
     }
 }
 

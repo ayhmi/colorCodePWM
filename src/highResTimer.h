@@ -7,7 +7,7 @@ extern "C" {
 
 typedef void (*HANDLERFUNC)(int);
 
-int createHighResHandler(HANDLERFUNC handler, int timerNSec);
+void createHighResHandler(HANDLERFUNC handler, int timerNSec);
 
 #ifdef __cplusplus
 }

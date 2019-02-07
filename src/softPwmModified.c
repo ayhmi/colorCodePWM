@@ -28,6 +28,7 @@
 
 #include "wiringPi.h"
 #include "softPwmModified.h"
+#include "highResTimer.h"
 
 // MAX_PINS:
 //	This is more than the number of Pi pins because we can actually softPwm.
@@ -50,17 +51,20 @@
 //	Another way to increase the frequency is to reduce the range - however
 //	that reduces the overall output accuracy...
 
-#define	PULSE_TIME	100
+#define	PULSE_TIME	100000
 
 typedef struct
 {
     int pin;
     int value;
-    int range;
     pthread_t thread;
+    unsigned char *valueList;
 } SoftPwmDataType;
 
 static SoftPwmDataType pwmDatas[MAX_PINS];
+static SoftPwmDataType *pwmDataList[MAX_PINS];
+static int pwmDataCount = 0;
+static int spwmRange = 255;
 
 /*
  * softPwmThread:
@@ -68,39 +72,23 @@ static SoftPwmDataType pwmDatas[MAX_PINS];
  *********************************************************************************
  */
 
-static void *softPwmThread(void *arg)
+static void softPwmThread(int arg)
 {
-    int pin, mark, space;
-    struct sched_param param;
+    int index;
+    int cycle;
 
-    param.sched_priority = sched_get_priority_max(SCHED_RR);
-    pthread_setschedparam(pthread_self(), SCHED_RR, &param);
-
-    pin = *((int *)arg);
-
-    piHiPri (90);
-
-    for (;;)
+    for (cycle = 0; cycle < spwmRange; cycle++)
     {
-        mark = pwmDatas[pin].value;
-        space = pwmDatas[pin].range - mark;
-
-        if (mark != 0)
-        {    
-            digitalWrite(pin, HIGH);
-        }
-        delayMicroseconds(mark * PULSE_TIME);
-
-        if (space != 0)
+        for (index = 0; index < pwmDataCount; index++)
         {
-            digitalWrite(pin, LOW);
+            digitalWrite(pwmDataList[index]->pin, (pwmDataList[index]->valueList)[cycle]);            
         }
-        delayMicroseconds(space * PULSE_TIME);
     }
-
-    return NULL;
 }
 
+static void assignListValues(SoftPwmDataType *pwmData)
+{
+}
 
 /*
  * softPwmWrite:
@@ -116,14 +104,30 @@ void softPwmModifiedWrite(int pin, int value)
         {
             value = 0;
         }
-        else if (value > pwmDatas[pin].range)
+        else if (value > spwmRange)
         {
-            value = pwmDatas[pin].range;
+            value = spwmRange;
         }
 
         pwmDatas[pin].value = value;
+        assignListValues(&pwmDatas[pin]);
     }
 }
+
+int softPwmModifiedInit(int pwmRange)
+{
+    if (pwmRange <= 0)
+    {
+        return -1;
+    }
+
+    spwmRange = pwmRange;
+    
+    createHighResHandler(softPwmThread, PULSE_TIME);
+    
+    return 0;
+}
+
 
 
 /*
@@ -132,31 +136,29 @@ void softPwmModifiedWrite(int pin, int value)
  *********************************************************************************
  */
 
-int softPwmModifiedCreate(int pin, int initialValue, int pwmRange)
+int softPwmModifiedCreate(int pin, int initialValue)
 {
+    // TODO check if init is called
     if (pin >= MAX_PINS)
     {
         return -1;
     }
 
-    if (pwmDatas[pin].range != 0)	// Already running on this pin
-    {
-        return -1;
-    }
-
-    if (pwmRange <= 0)
-    {
-        return -1;
-    }
-
+    // TODO search for the list and check if it is already created
+    
     digitalWrite(pin, LOW);
     pinMode(pin, OUTPUT);
 
     pwmDatas[pin].value = initialValue;
-    pwmDatas[pin].range = pwmRange;
     pwmDatas[pin].pin = pin;
+    pwmDatas[pin].valueList = malloc(spwmRange);
+    
+    pwmDataList[pwmDataCount] = &pwmDatas[pin];
+    pwmDataCount++;
+    
+    assignListValues(&pwmDatas[pin]);
 
-    return pthread_create(&pwmDatas[pin].thread, NULL, softPwmThread, (void *)&pwmDatas[pin].pin);
+    return 0;
 }
 
 
@@ -170,12 +172,6 @@ void softPwmModifiedStop(int pin)
 {
     if ((pin < MAX_PINS) && (pin >= 0))
     {
-        if (pwmDatas[pin].range != 0)
-        {
-            pthread_cancel(pwmDatas[pin].thread);
-            pthread_join(pwmDatas[pin].thread, NULL);
-            pwmDatas[pin].range = 0;
-            digitalWrite(pin, LOW);
-        }
+        // TODO search for the list and remove it
     }
 }

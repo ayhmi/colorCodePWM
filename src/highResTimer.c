@@ -6,7 +6,7 @@
 #include <time.h>
 #include "highResTimer.h"
 
-int createHighResHandler(HANDLERFUNC handler, int timerNSec)
+void createHighResHandler(HANDLERFUNC handler, int timerNSec)
 {
     struct itimerspec timerSpec, timerSpecOld;
     struct sigaction action;

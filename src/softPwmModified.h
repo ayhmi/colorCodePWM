@@ -29,9 +29,10 @@
 extern "C" {
 #endif
 
-extern int  softPwmModifiedCreate(int pin, int value, int range) ;
-extern void softPwmModifiedWrite(int pin, int value) ;
-extern void softPwmModifiedStop(int pin) ;
+int softPwmModifiedInit(int range);
+int softPwmModifiedCreate(int pin, int value);
+void softPwmModifiedWrite(int pin, int value);
+void softPwmModifiedStop(int pin);
 
 #ifdef __cplusplus
 }
