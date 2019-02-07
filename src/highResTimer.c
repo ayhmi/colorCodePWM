@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <signal.h>
 #include <time.h>
+#include "highResTimer.h"
 
 int createHighResHandler(HANDLERFUNC sa_handler, int timerNSec)
 {
