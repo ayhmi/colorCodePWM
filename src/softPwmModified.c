@@ -64,7 +64,7 @@ typedef struct
 static SoftPwmDataType pwmDatas[MAX_PINS];
 static SoftPwmDataType *pwmDataList[MAX_PINS];
 static int pwmDataCount = 0;
-static int spwmRange = 255;
+static int spwmRange = 1;
 
 /*
  * softPwmThread:
@@ -75,15 +75,14 @@ static int spwmRange = 255;
 static void softPwmThread(int arg)
 {
     int index;
-    int cycle;
+    static int cycle = 0;
 
-    for (cycle = 0; cycle < spwmRange; cycle++)
+    for (index = 0; index < pwmDataCount; index++)
     {
-        for (index = 0; index < pwmDataCount; index++)
-        {
-            digitalWrite(pwmDataList[index]->pin, (pwmDataList[index]->valueList)[cycle]);            
-        }
+        digitalWrite(pwmDataList[index]->pin, (pwmDataList[index]->valueList)[cycle]);            
     }
+    
+    cycle = (cycle + 1) % spwmRange;
 }
 
 static void assignListValues(SoftPwmDataType *pwmData)
