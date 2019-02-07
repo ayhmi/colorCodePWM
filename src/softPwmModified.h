@@ -21,15 +21,19 @@
  *    If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************
  */
+ 
+#ifndef SOFTPWMMODIFIED_H
+#define SOFTPWMMODIFIED_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-extern int  softPwmModifiedCreate (int pin, int value, int range) ;
-extern void softPwmModifiedWrite  (int pin, int value) ;
-extern void softPwmModifiedStop   (int pin) ;
+extern int  softPwmModifiedCreate(int pin, int value, int range) ;
+extern void softPwmModifiedWrite(int pin, int value) ;
+extern void softPwmModifiedStop(int pin) ;
 
 #ifdef __cplusplus
 }
+#endif
 #endif

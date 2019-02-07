@@ -9,10 +9,10 @@ LDIR=lib
 
 LIBS=-lwiringPi -lpthread -lrt
 
-_DEPS = colorControl.h softPwmModified.h
+_DEPS = colorControl.h softPwmModified.h highResTimer.h
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
-_OBJ = highResTimer.o
+_OBJ = colorControl.o server.o softPwmModified.o highResTimer.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 

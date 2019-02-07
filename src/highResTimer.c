@@ -1,4 +1,3 @@
-/*   hires_timer.c: 100 microsecond timer example program   */
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -6,19 +5,16 @@
 #include <signal.h>
 #include <time.h>
 
-void print_time (int);
-
-timer_t timer1;
-
-int main (int argc, char **argv)
+int createHighResHandler(void (*sa_handler)(int), int timerNSec)
 {
     struct itimerspec timerSpec, timerSpecOld;
     struct sigaction action;
     struct sigevent sevent;
+    timer_t timer1;
 
     /* SIGALRM for printing time */
     memset (&action, 0, sizeof (struct sigaction));
-    action.sa_handler = print_time;
+    action.sa_handler = sa_handler;
     if (sigaction (SIGALRM, &action, NULL) == -1)
         perror ("sigaction");
 
@@ -31,27 +27,10 @@ int main (int argc, char **argv)
         perror ("timer_create");
 
 
-    timerSpec.it_interval.tv_sec = 0;
-    timerSpec.it_interval.tv_nsec = 100000;  /* 100 us */
-    timerSpec.it_value.tv_sec = 0;
-    timerSpec.it_value.tv_nsec = 100000;     /* 100 us */
+    timerSpec.it_interval.tv_sec = timerNSec / 1000000000;
+    timerSpec.it_interval.tv_nsec = timerNSec % 1000000000;  /* 100 us */
+    timerSpec.it_value.tv_sec = timerNSec / 1000000000;
+    timerSpec.it_value.tv_nsec = timerNSec % 1000000000;     /* 100 us */
     if (timer_settime (timer1, 0, &timerSpec, &timerSpecOld) == -1)
         perror ("timer_settime");
-    
-    while(1);
-
-    exit (EXIT_SUCCESS);
-}
-
-void print_time (int signum)
-{   
-    struct timespec tp;
-    char buffer [80];
-
-    if (clock_gettime (CLOCK_MONOTONIC, &tp) == -1)
-        perror ("clock_gettime");
-
-    sprintf (buffer, "%ld s %ld ns overrun = %d\n", tp.tv_sec,
-                      tp.tv_nsec, timer_getoverrun (timer1));
-    write (STDOUT_FILENO, buffer, strlen (buffer));
 }
