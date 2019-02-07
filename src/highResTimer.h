@@ -5,7 +5,9 @@
 extern "C" {
 #endif
 
-int createHighResHandler(void (*sa_handler)(int), int timerNSec);
+typedef void (*HANDLERFUNC)(int);
+
+int createHighResHandler(HANDLERFUNC sa_handler, int timerNSec);
 
 #ifdef __cplusplus
 }
