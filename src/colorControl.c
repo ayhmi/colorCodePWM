@@ -29,7 +29,7 @@ void ledInit(void)
 
 void setLed(unsigned int ledIndex, unsigned char value)
 {
-    unsigned char pwmValue = (RANGE * value) / 255;
+    unsigned char pwmValue = (RANGE * value) / RANGE;
     
     softPwmModifiedWrite(ledMap[ledIndex], pwmValue);
 }
