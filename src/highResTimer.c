@@ -16,6 +16,7 @@ void createHighResHandler(HANDLERFUNC handler, int timerNSec)
     /* SIGALRM for printing time */
     memset (&action, 0, sizeof (struct sigaction));
     action.sa_handler = handler;
+    action.sa_flags = SA_RESTART;
     if (sigaction (SIGALRM, &action, NULL) == -1)
         perror ("sigaction");
 
