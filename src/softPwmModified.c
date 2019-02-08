@@ -141,7 +141,7 @@ int softPwmModifiedInit(int pwmRange)
     
     createHighResHandler(softPwmThread, PULSE_TIME);
     
-    delayMiscoreconds(1000000);
+    delayMicroseconds(1000000);
     
     return 0;
 }
