@@ -72,7 +72,7 @@ static int spwmRange = 1;
  *********************************************************************************
  */
 
-static void softPwmThread(int arg)
+static void softPwmThread_(int arg)
 {
     int index;
     static int cycle = 0;
@@ -83,6 +83,11 @@ static void softPwmThread(int arg)
     }
     
     cycle = (cycle + 1) % spwmRange;
+}
+
+static void softPwmThread(int arg)
+{
+    printf("a\n");
 }
 
 static void assignListValues(SoftPwmDataType *pwmData)
@@ -135,6 +140,8 @@ int softPwmModifiedInit(int pwmRange)
     spwmRange = pwmRange;
     
     createHighResHandler(softPwmThread, PULSE_TIME);
+    
+    delayMiscoreconds(1000000);
     
     return 0;
 }
