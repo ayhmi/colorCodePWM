@@ -164,10 +164,10 @@ int softPwmModifiedCreate(int pin, int initialValue)
     pwmDatas[pin].pin = pin;
     pwmDatas[pin].valueList = malloc(spwmRange);
     
-    pwmDataList[pwmDataCount] = &pwmDatas[pin];
-    pwmDataCount++;
-    
     assignListValues(&pwmDatas[pin]);
+    
+    pwmDataList[pwmDataCount] = &pwmDatas[pin];
+    pwmDataCount++;    
 
     return 0;
 }
