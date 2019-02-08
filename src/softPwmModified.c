@@ -87,6 +87,18 @@ static void softPwmThread(int arg)
 
 static void assignListValues(SoftPwmDataType *pwmData)
 {
+    int onCount = pwmData->value;
+    int offCount = spwmRange - onCount;
+    int index;
+
+    for (index = 0; index < onCount; index++)
+    {
+        pwmData->valueList[index] = 1;
+    }
+    for (; index < spwmRange; index++)
+    {
+        pwmData->valueList[index] = 0;
+    }
 }
 
 /*
