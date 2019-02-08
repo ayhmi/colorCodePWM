@@ -51,7 +51,7 @@
 //	Another way to increase the frequency is to reduce the range - however
 //	that reduces the overall output accuracy...
 
-#define	PULSE_TIME	100000
+#define	PULSE_TIME	10000
 
 typedef struct
 {
