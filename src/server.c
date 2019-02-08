@@ -115,7 +115,7 @@ int main(int argc, char **argv)
     clientlen = sizeof(clientaddr);
     while (1) 
     {       
-        //setColor(color); 
+        setColor(color); 
         /* wait for a connection request */
         childfd = accept(parentfd, (struct sockaddr *) &clientaddr, &clientlen);
         if (childfd < 0)

@@ -20,6 +20,8 @@ void ledInit(void)
     wiringPiSetup();
     
     softPwmModifiedInit(RANGE);
+    
+    delayMicroseconds(100000);
 
     for (i = 0; i < NUM_LEDS; ++i)
     {
