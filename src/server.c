@@ -107,7 +107,7 @@ int main(int argc, char **argv)
     if (listen(parentfd, 5) < 0) /* allow 5 requests to queue up */
         error("ERROR on listen");
     
-    ledInit();
+    //ledInit();
     /*
      * main loop: wait for a connection request, parse HTTP,
      * serve requested content, close connection.
@@ -115,7 +115,7 @@ int main(int argc, char **argv)
     clientlen = sizeof(clientaddr);
     while (1) 
     {       
-        setColor(color); 
+        //setColor(color); 
         /* wait for a connection request */
         childfd = accept(parentfd, (struct sockaddr *) &clientaddr, &clientlen);
         if (childfd < 0)
